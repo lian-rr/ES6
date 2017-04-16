@@ -30,7 +30,7 @@ class Ball extends Figure {
         ctx.closePath();
     }
 
-    move(){
+    move() {
         this.x += this.dx;
         this.y += this.dy;
     }
@@ -89,7 +89,7 @@ class Paddle extends Figure {
 
 class Brick extends Figure {
     constructor(x, y, width, height) {
-        super(x,y);
+        super(x, y);
         this.width = width;
         this.height = height;
         this.lives = 1;
@@ -106,6 +106,28 @@ class Brick extends Figure {
 
 
 //---------------------------------------Game--------------------------------------------------
+class Game {
+    constructor(canvas, ball, paddle) {
+        this.canvas = canvas;
+        this.ball = ball;
+        this.paddle = paddle;
+    }
+
+    play(ctx) {
+        this.ball.draw(ctx);
+        this.paddle.draw(ctx);
+
+        this.ball.move();
+
+        if (this.ball.x + this.ball.dx > this.canvas.width - this.ball.radius || this.ball.x + this.ball.dx < this.ball.radius) {
+            ball.dx = -ball.dx;
+        }
+        if (this.ball.y + this.ball.dy > this.canvas.height - this.ball.radius || this.ball.y + this.ball.dy < this.ball.radius) {
+            this.ball.dy = -this.ball.dy;
+        }
+
+    }
+}
 
 const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext("2d");
@@ -113,24 +135,14 @@ const ctx = canvas.getContext("2d");
 ball = new Ball(canvas, 10);
 paddle = new Paddle(canvas, 10, 75);
 
+game = new Game(canvas,ball,paddle);
+
+
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    ball.draw(ctx);
-    paddle.draw(ctx);
-
-    ball.move();
-
-    if(ball.x + ball.dx > canvas.width-ball.radius || ball.x + ball.dx < ball.radius) {
-        ball.dx = -ball.dx;
-    }
-    if(ball.y + ball.dy > canvas.height-ball.radius || ball.y + ball.dy < ball.radius) {
-        ball.dy = -ball.dy;
-    }
-
-
+    game.play(ctx);
     requestAnimationFrame(draw);
 }
 
 draw();
-// setInterval(draw, 10);
+
