@@ -1,12 +1,12 @@
 //Abstract class
 class Figure {
-    constructor() {
-        if (new.target === Shape)
-            throw new TypeError("Cannot construct Shape instances directly");
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
     }
 
     draw(ctx) {
-        if (new.target === Shape)
+        if (typeof this === Figure)
             throw new TypeError("This method is not defined");
     }
 }
@@ -14,9 +14,9 @@ class Figure {
 //---------------------------------------Figure--------------------------------------------------
 
 class Ball extends Figure {
+
     constructor(canvas, ballRadius) {
-        this.x = canvas.width / 2;
-        this.y = canvas.height - 30;
+        super(canvas.width / 2, canvas.height - 30);
         this.radius = ballRadius;
         this.dx = 2;
         this.dy = -2;
@@ -29,6 +29,11 @@ class Ball extends Figure {
         ctx.fill();
         ctx.closePath();
     }
+
+    move(){
+        this.x += this.dx;
+        this.y += this.dy;
+    }
 }
 
 
@@ -36,10 +41,10 @@ class Ball extends Figure {
 
 class Paddle extends Figure {
     constructor(canvas, paddleHeight, paddleWidth) {
+        super((canvas.width - paddleWidth) / 2, canvas.height - paddleHeight);
         this.canvas = canvas;
         this.height = paddleHeight;
         this.width = paddleWidth;
-        this.x = (canvas.width - paddleWidth) / 2;
 
         this.rightPressed = false;
         this.leftPressed = false;
@@ -47,7 +52,7 @@ class Paddle extends Figure {
 
     draw(ctx) {
         ctx.beginPath();
-        ctx.rect(this.x, this.canvas.height - this.height, this.width, this.height);
+        ctx.rect(this.x, this.y, this.width, this.height);
         ctx.fillStyle = "#0095DD";
         ctx.fill();
         ctx.closePath();
@@ -74,7 +79,7 @@ class Paddle extends Figure {
     mouseMoveHandler(e) {
         let relativeX = e.clientX - this.canvas.offsetLeft;
         if (relativeX > 0 && relativeX < this.canvas.width) {
-            paddleX = relativeX - paddleWidth / 2;
+            this.x = relativeX - this.width / 2;
         }
     }
 
@@ -82,16 +87,15 @@ class Paddle extends Figure {
 
 //---------------------------------------Bricks--------------------------------------------------
 
-class Brick extends Figure{
-    constructor(width, height, brickX, brickY){
+class Brick extends Figure {
+    constructor(x, y, width, height) {
+        super(x,y);
         this.width = width;
         this.height = height;
-        this.x = brickX;
-        this.y = brickY;
         this.lives = 1;
     }
 
-    draw(ctx){
+    draw(ctx) {
         ctx.beginPath();
         ctx.rect(this.x, this.y, this.width, this.height);
         ctx.fillStyle = "#0095DD";
@@ -99,3 +103,34 @@ class Brick extends Figure{
         ctx.closePath();
     }
 }
+
+
+//---------------------------------------Game--------------------------------------------------
+
+const canvas = document.getElementById("myCanvas");
+const ctx = canvas.getContext("2d");
+
+ball = new Ball(canvas, 10);
+paddle = new Paddle(canvas, 10, 75);
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ball.draw(ctx);
+    paddle.draw(ctx);
+
+    ball.move();
+
+    if(ball.x + ball.dx > canvas.width-ball.radius || ball.x + ball.dx < ball.radius) {
+        ball.dx = -ball.dx;
+    }
+    if(ball.y + ball.dy > canvas.height-ball.radius || ball.y + ball.dy < ball.radius) {
+        ball.dy = -ball.dy;
+    }
+
+
+    requestAnimationFrame(draw);
+}
+
+draw();
+// setInterval(draw, 10);

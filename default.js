@@ -4,8 +4,8 @@ var ctx = canvas.getContext("2d");
 var score = 0;
 var lives = 3;
 
-var x = canvas.width / 2;
-var y = canvas.height - 30;
+var x = canvas._width / 2;
+var y = canvas._height - 30;
 
 var dx = 2;
 var dy = -2;
@@ -22,7 +22,7 @@ function drawBall() {
 
 var paddleHeight = 10;
 var paddleWidth = 75;
-var paddleX = (canvas.width - paddleWidth) / 2;
+var paddleX = (canvas._width - paddleWidth) / 2;
 
 var rightPressed = false;
 var leftPressed = false;
@@ -52,7 +52,7 @@ function keyUpHandler(e) {
 
 function mouseMoveHandler(e) {
     var relativeX = e.clientX - canvas.offsetLeft;
-    if (relativeX > 0 && relativeX < canvas.width) {
+    if (relativeX > 0 && relativeX < canvas._width) {
         paddleX = relativeX - paddleWidth / 2;
     }
 }
@@ -79,7 +79,7 @@ function collisionDetection() {
 
 function drawPaddle() {
     ctx.beginPath();
-    ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+    ctx.rect(paddleX, canvas._height - paddleHeight, paddleWidth, paddleHeight);
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
@@ -131,11 +131,11 @@ function drawScore() {
 function drawLives() {
     ctx.font = "16px Arial";
     ctx.fillStyle = "#0095DD";
-    ctx.fillText("Lives: " + lives, canvas.width - 65, 20);
+    ctx.fillText("Lives: " + lives, canvas._width - 65, 20);
 }
 
 function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas._width, canvas._height);
 
     drawBricks();
     drawBall();
@@ -144,12 +144,12 @@ function draw() {
     drawScore();
     drawLives();
 
-    if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+    if (x + dx > canvas._width - ballRadius || x + dx < ballRadius) {
         dx = -dx;
     }
     if (y + dy < ballRadius) {
         dy = -dy;
-    } else if (y + dy > canvas.height - ballRadius) {
+    } else if (y + dy > canvas._height - ballRadius) {
         if (x > paddleX && x < paddleX + paddleWidth) {
             dy = -dy;
         }
@@ -160,11 +160,11 @@ function draw() {
                 document.location.reload();
             }
             else {
-                x = canvas.width / 2;
-                y = canvas.height - 30;
+                x = canvas._width / 2;
+                y = canvas._height - 30;
                 dx = 2;
                 dy = -2;
-                paddleX = (canvas.width - paddleWidth) / 2;
+                paddleX = (canvas._width - paddleWidth) / 2;
             }
         }
     }
@@ -172,7 +172,7 @@ function draw() {
     x += dx;
     y += dy;
 
-    if (rightPressed && paddleX < canvas.width - paddleWidth) {
+    if (rightPressed && paddleX < canvas._width - paddleWidth) {
         paddleX += 7;
     }
     else if (leftPressed && paddleX > 0) {
