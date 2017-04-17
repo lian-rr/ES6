@@ -99,8 +99,8 @@ class Score extends Figure{
 
     draw(ctx){
         ctx.font = "16px Arial";
-        ctx.fillStyle = "#0095DD";
-        ctx.fillText("Score: " + this.score, this.x, this.y);
+        ctx.fillStyle = "#FFF";
+        ctx.fillText(`Score: ${this.score}`, this.x, this.y);
     }
 
 }
@@ -115,8 +115,8 @@ class Live extends Figure{
 
     draw(ctx){
         ctx.font = "16px Arial";
-        ctx.fillStyle = "#0095DD";
-        ctx.fillText("Lives: " + this.lives, this.x, this.y);
+        ctx.fillStyle = "#FFF";
+        ctx.fillText(`Lives: ${this.lives}`, this.x, this.y);
     }
 
 }
@@ -134,13 +134,6 @@ class Game {
         this.lives = new Live(canvas.width-65,20);
 
         this.createBricks(75,20);
-    }
-
-    mouseMoveHandler(e) {
-        let relativeX = e.clientX - this.canvas.offsetLeft;
-        if (relativeX > 0 && relativeX < this.canvas.width) {
-            paddle.x = relativeX - paddle.width / 2;
-        }
     }
 
     keyDownHandler(e) {
@@ -250,6 +243,8 @@ class Game {
     }
 }
 
+
+//------------------------------------------Start Game------------------------------------------------------
 document.getElementById("start").addEventListener("click", () => {
 
     const canvas = document.getElementById("myCanvas");
